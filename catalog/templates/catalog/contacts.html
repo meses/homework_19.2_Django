@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Контакты</title>
+</head>
+<body>
+<h1>Контакты</h1>
+<a href="/">Главная</a>
+<div>
+    <h3>Здесь могли бы быть наши контакты, но увы... Зато вы можете внести свои.</h3>
+    <p>Внесите ваши данные в форму ниже:</p>
+    <form name="test" method="post">
+        {% csrf_token %}
+        <p><b>Ваше имя:</b><br>
+            <input type="text" name="name" size="40">
+        </p>
+        <p><b>Ваш телефон:</b><br>
+            <input type="tel" name="number" size="40">
+        </p>
+    <p><input type="submit" value="Отправить">
+        <input type="reset" value="Очистить">
+    </p>
+    </form>
+</div>
+</body>
+</html>
