@@ -9,7 +9,8 @@ class Command(BaseCommand):
         category_list = [
             {'title': 'Ноутбуки', 'description': 'Категория Ноутбуки'},
             {"title": "Смартфоны", "description": "Категория Смартфоны"},
-            {"title": "Телевизоры", "description": "Категория Телевизоры"}
+            {"title": "Телевизоры", "description": "Категория Телевизоры"},
+            {"title": "Мониторы", "description": "Категория Мониторы"}
         ]
 
         category_for_append = []

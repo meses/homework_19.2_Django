@@ -14,7 +14,7 @@ class Command(BaseCommand):
             {'title': 'Смартфон REALME C25s 4/64Gb', 'description': 'серый', 'price': 8990, 'category': Category.objects.get(title='Смартфоны')},
             {'title': '50" Телевизор HAIER Smart TV S1', 'description': '4K Ultra HD, черный, СМАРТ ТВ, Android', 'price': 27990, 'category': Category.objects.get(title='Телевизоры')},
             {'title': '43" Телевизор Xiaomi Mi TV A2', 'description': '4K Ultra HD, черный, СМАРТ ТВ, Android', 'price': 24990, 'category': Category.objects.get(title='Телевизоры')},
-            {'title': '55" Телевизор Samsung UE55AU7100UXCE', 'description': '4K Ultra HD, титан, СМАРТ ТВ, Tizen OS', 'price': 49990, 'category': Category.objects.get(title='Телевизоры')},
+            {'title': 'Монитор Huawei MateView SE SSN-24 23.8"', 'description': 'черный [53060683]', 'price': 11990, 'category': Category.objects.get(title='Мониторы')},
         ]
 
         products_for_append = []
