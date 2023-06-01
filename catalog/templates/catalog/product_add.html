@@ -1,0 +1,25 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+
+<div class="col-md-4">
+  <div class="card mb-4 box-shadow">
+     <div class="card-body">
+      <h2>Добавьте товар</h2>
+      <form method="post">
+        {% csrf_token %}
+        Название<input class="form-control mb-2" name="title" />
+        Описание<textarea class="form-control mb-2" name="description"></textarea>
+        Цена<input class="form-control mb-2" name="price" />
+        Категория
+          <select class="form-control mb-2" name="category_id">
+            {% for category in category_list %}
+              <option value="{{ category.id }}">{{ category.title }}</option>
+            {% endfor %}
+          </select>
+        <button type="submit" class="btn btn-primary form-control">Отправить</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
