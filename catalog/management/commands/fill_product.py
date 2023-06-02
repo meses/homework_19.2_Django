@@ -9,10 +9,10 @@ class Command(BaseCommand):
         products_lst = [
             {'title': 'Ноутбук Huawei MateBook D 15 BOD-WDI9',
              'description': '15.6", IPS, Intel Core i3 1115G4 3ГГц, 2-ядерный, 8ГБ DDR4, 256ГБ SSD, Intel UHD Graphics , без операционной системы, серый космос [53013sdv]',
-             'price': 42999, 'category': Category.objects.get(title='Ноутбуки')},
+             'price': 42999, 'image': 'product_image/Huawei_1.jpg', 'category': Category.objects.get(title='Ноутбуки')},
             {'title': 'Ноутбук HIPER Workbook N15RP, 15.6',
              'description': 'AMD Ryzen 5 3500U 2.1ГГц, 4-ядерный, 16ГБ DDR4, 512ГБ SSD, AMD Radeon Vega 8, Windows 10 Professional, черный [n15rp96wi]',
-             'price': 44990, 'category': Category.objects.get(title='Ноутбуки')},
+             'price': 44990, 'image': 'product_image/Hiper_1.jpg','category': Category.objects.get(title='Ноутбуки')},
             {'title': 'Ноутбук игровой HIPER G16',
              'description': '16.1", Intel Core i5 10400 2.9ГГц, 6-ядерный, 16ГБ DDR4, 512ГБ SSD, NVIDIA GeForce RTX 3070 для ноутбуков - 8 ГБ, без операционной системы, черный [g16rtx3070a10400lx]',
              'price': 125990, 'category': Category.objects.get(title='Ноутбуки')},
