@@ -1,0 +1,27 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <div class="container">
+        <h4>Наименование:</h4><h5>{{ product.title }}</h5>
+        <br>
+        <h4>Описание:</h4><h5>{{ product.description }}</h5>
+        <br>
+        <h4>Категория:</h4><h5>{{ product.category }}</h5>
+
+        <br>
+        <h4>Цена:</h4><h5>{{ product.price }} руб.</h5>
+
+        <br>
+        <h4>Добавлено:</h4><h5>{{ product.created_at }}</h5>
+
+        <br>
+        <h4>Обновлено:</h4><h5>{{ product.updated_at }}</h5>
+
+        <br>
+        {% if product.image %}
+            <img src="{{ product.image|mediapath }}" alt="img">
+        {% endif %}
+
+    </div>
+
+{% endblock %}
