@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 
 from catalog.models import Category, Product, Blog
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from catalog.services import send_congratuation_email
 
 
 # Create your views here.
@@ -57,6 +58,11 @@ class BlogListView(ListView):
         'company_title': company_name
     }
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_published=True)
+        return queryset
+
 class BlogCreateView(CreateView):
     model = Blog
     fields = ('title', 'content',)
@@ -91,6 +97,16 @@ class BlogDetailView(DetailView):
         context_data['title'] = self.get_object().title
         return context_data
 
+    def get_object(self, queryset=None):
+        object = Blog.objects.get(pk=self.kwargs['pk'])
+        if object:
+            object.views_count += 1
+            object.save()
+            if object.views_count == 100:
+                send_congratuation_email()
+                pass
+        return object
+
 def toggle_published(request, pk):
     post_item = get_object_or_404(Blog, pk=pk)
     if post_item.is_published:
@@ -102,14 +118,38 @@ def toggle_published(request, pk):
 
     return redirect(reverse('catalog:post_update', args=[post_item.pk]))
 
-def category(request):
-    category_list = Category.objects.all()
-    context = {
-        'category_list': category_list,
+class CategoryListView(ListView):
+    model = Category
+    extra_context = {
         'title': 'Категории',
         'company_title': company_name
     }
-    return render(request, 'catalog/category.html', context)
+
+class CategoryCreateView(CreateView):
+    model = Category
+    fields = ('title', 'description',)
+    success_url = reverse_lazy('catalog:category')
+    extra_context = {
+        'title': 'Создать категорию',
+        'company_title': company_name
+    }
+
+class CategoryUpdateView(UpdateView):
+    model = Category
+    fields = ('title', 'description',)
+    success_url = reverse_lazy('catalog:category')
+    extra_context = {
+        'title': 'Изменить категорию',
+        'company_title': company_name
+    }
+
+class CategoryDeleteView(DeleteView):
+    model = Category
+    success_url = reverse_lazy('catalog:category')
+    extra_context = {
+        'title': 'Удалить категорию',
+        'company_title': company_name
+    }
 
 def contacts(request):
     if request.method == 'POST':
