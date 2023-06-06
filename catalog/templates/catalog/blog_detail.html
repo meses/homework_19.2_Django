@@ -1,0 +1,22 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <div class="container">
+        <h4>Наименование:</h4><h5>{{ blog.title }}</h5>
+        <br>
+        <h4>Описание:</h4><h5>{{ blog.content }}</h5>
+        <br>
+
+        <h4>Добавлено:</h4><h5>{{ blog.created_at }}</h5>
+
+        <br>
+        <h4>Опубликовано:</h4><h5>{{ blog.is_published }}</h5>
+
+        <br>
+        {% if blog.image %}
+            <img src="{{ blog.image|mediapath }}" alt="img">
+        {% endif %}
+
+    </div>
+
+{% endblock %}

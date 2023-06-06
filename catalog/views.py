@@ -1,7 +1,7 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
 
-from catalog.models import Category, Product
+from catalog.models import Category, Product, Blog
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
@@ -49,39 +49,58 @@ class ProductDeleteView(DeleteView):
         'company_title': company_name
     }
 
-#def product(request, pk):
-#    product_item = Product.objects.get(pk=pk)
-#    context = {
-#        'product' : product_item,
-#        'title': 'Товар',
-#        'company_title': company_name
-#    }
-#    return render(request, 'catalog/product_detail.html', context)
 
-#def index(request):
-#    product_list = Product.objects.all()
-#    context = {
-#        'product_list': product_list,
-#        'title': 'Товары',
-#        'company_title': company_name
-#    }
-#    return render(request, 'catalog/product_list.html', context)
+class BlogListView(ListView):
+    model = Blog
+    extra_context = {
+        'title': 'Блог магазина',
+        'company_title': company_name
+    }
 
+class BlogCreateView(CreateView):
+    model = Blog
+    fields = ('title', 'content',)
+    success_url = reverse_lazy('catalog:blog')
+    extra_context = {
+        'title': 'Создать пост',
+        'company_title': company_name
+    }
 
-#def product_add(request):
-#    category_list = Category.objects.all()
-#    content = {
-#        'category_list': category_list
-#    }
-#    if request.method == 'POST':
-#        title = request.POST.get('title')
-#        description = request.POST.get('description')
-#        price = request.POST.get('price')
-#        category_id = request.POST.get('category_id')
-#        Product.objects.create(title=title, description=description, price=price, category_id=category_id)
-#        #print(f'{title}, {category_id}')
-#
-#    return render(request, 'catalog/product_add.html', content)
+class BlogUpdateView(UpdateView):
+    model = Blog
+    fields = ('title', 'content',)
+    success_url = reverse_lazy('catalog:blog')
+    extra_context = {
+        'title': 'Изменить пост',
+        'company_title': company_name
+    }
+
+class BlogDeleteView(DeleteView):
+    model = Blog
+    success_url = reverse_lazy('catalog:blog')
+    extra_context = {
+        'title': 'Удалить пост',
+        'company_title': company_name
+    }
+
+class BlogDetailView(DetailView):
+    model = Blog
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = self.get_object().title
+        return context_data
+
+def toggle_published(request, pk):
+    post_item = get_object_or_404(Blog, pk=pk)
+    if post_item.is_published:
+        post_item.is_published = False
+    else:
+        post_item.is_published = True
+
+    post_item.save()
+
+    return redirect(reverse('catalog:post_update', args=[post_item.pk]))
 
 def category(request):
     category_list = Category.objects.all()

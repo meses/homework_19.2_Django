@@ -1,7 +1,13 @@
 from django.db import models
+from slugify import slugify
 
 # Create your models here.
 NULLABLE = {'null': True, 'blank': True}
+
+
+def gen_slug(string):
+    finally_slug = slugify(string)
+    return finally_slug
 
 class Product(models.Model):
     title = models.CharField(max_length=256, verbose_name='Назавание')
@@ -34,3 +40,25 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+class Blog(models.Model):
+    title = models.CharField(max_length=256, verbose_name='Назавание')
+    slug = models.CharField(max_length=256, unique=True, verbose_name='URL')
+    content = models.TextField(max_length=10000, verbose_name='Содержимое')
+    image = models.ImageField(upload_to='blog_preview/', verbose_name='Превью', **NULLABLE)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    is_published = models.BooleanField(default=False ,verbose_name='Опубликовано')
+    views_count = models.IntegerField(default=0, verbose_name='Количество просмотров')
+
+    def __str__(self):
+        return f'{self.title}, {self.created_at}, Опубликовано:{self.is_published}'
+
+
+    def save(self, *args, **kwargs):
+        self.slug = gen_slug(self.title)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'блог'
+        verbose_name_plural = 'блоги'
+        ordering = ('id',)

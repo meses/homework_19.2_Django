@@ -1,0 +1,35 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+
+<div class="col-md-4">
+  <div class="card mb-4 box-shadow">
+     <div class="card-body">
+         {% if blog %}
+            <h2>{{ blog.title }}</h2>
+         {% else %}
+            <h2>Создайте пост</h2>
+         {% endif %}
+         <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+             {% if blog %}
+             <a type="button" href="{% url 'catalog:toggle_published' blog.pk %}"
+                class="btn btn-sm btn-outline-secondary form-control">
+             {% if blog.is_published  %}
+                 Снять с публикации
+             {% else %}
+                Публиковать
+             {% endif %}
+             </a>
+                <button type="submit" class="btn btn-primary form-control">Сохранить</button>
+             {% else %}
+                <button type="submit" class="btn btn-primary form-control">Создать</button>
+             {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
