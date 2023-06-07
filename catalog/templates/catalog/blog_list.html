@@ -9,9 +9,21 @@
       <p class="card-text">Добавить статью</p>
       <div class="d-flex justify-content-between align-items-center">
         <div class="btn-group">
-          <form action="{% url 'catalog:blog_add' %}" method="GET">
-	        <button type="submit" class="btn btn-sm btn-outline-secondary">Добавить</button>
-          </form>
+          <div class="btn-group">
+            <a type="button" href="{% url 'catalog:blog_add' %}"
+                class="btn btn-sm btn-outline-secondary form-control"> Добавить
+            </a>
+            <br>
+            {% if request.get_full_path == '/blog/not_published' %}
+            <a type="button" href="{% url 'catalog:blog' %}"
+                class="btn btn-sm btn-outline-secondary form-control"> Показать опубликованные
+            </a>
+              {% else %}
+            <a type="button" href="{% url 'catalog:blog_not_published' %}"
+                class="btn btn-sm btn-outline-secondary form-control"> Показать не опубликованные
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>

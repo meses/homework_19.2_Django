@@ -63,6 +63,18 @@ class BlogListView(ListView):
         queryset = queryset.filter(is_published=True)
         return queryset
 
+class BlogListViewNotPublished(ListView):
+    model = Blog
+    extra_context = {
+        'title': 'Блог магазина',
+        'company_title': company_name
+    }
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_published=False)
+        return queryset
+
 class BlogCreateView(CreateView):
     model = Blog
     fields = ('title', 'content',)
@@ -97,16 +109,15 @@ class BlogDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = self.get_object().title
+        self.object.views_count += 1
+        self.object.save()
         return context_data
 
     def get_object(self, queryset=None):
         object = Blog.objects.get(pk=self.kwargs['pk'])
-        if object:
-            object.views_count += 1
-            object.save()
-            if object.views_count == 100:
-                send_congratuation_email()
-                pass
+        if object.views_count == 100:
+            send_congratuation_email()
+            pass
         return object
 
 def toggle_published(request, pk):
