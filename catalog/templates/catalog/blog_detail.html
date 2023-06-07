@@ -6,12 +6,11 @@
         <br>
         <h4>Описание:</h4><h5>{{ blog.content }}</h5>
         <br>
-
         <h4>Добавлено:</h4><h5>{{ blog.created_at }}</h5>
-
         <br>
         <h4>Опубликовано:</h4><h5>{{ blog.is_published }}</h5>
-
+        <br>
+        <h4>Количество просмотров:</h4><h5>{{ blog.views_count }}</h5>
         <br>
         {% if blog.image %}
             <img src="{{ blog.image|mediapath }}" alt="img">
