@@ -36,7 +36,7 @@
           <a type="button" href="{% url 'catalog:product_delete' product.id %}"
                                class="btn btn-sm btn-outline-secondary">Удалить</a>
         </div>
-        <small class="text-muted">9 mins</small>
+        <small class="text-muted">{{ product.get_active_version }}</small>
       </div>
     </div>
   </div>
