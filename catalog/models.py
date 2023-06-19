@@ -29,6 +29,10 @@ class Product(models.Model):
         verbose_name_plural = 'Продукты'
         ordering = ('title',)
 
+    def get_active_version(self):
+        """Получение активной версии"""
+        return Versions.get_active_version(self) #Обращаемся к модели Versions, к функции получения версии
+
 class Category(models.Model):
     title = models.CharField(max_length=50, verbose_name='Название')
     description = models.CharField(max_length=256, verbose_name='Описание')
@@ -62,3 +66,26 @@ class Blog(models.Model):
         verbose_name = 'блог'
         verbose_name_plural = 'блоги'
         ordering = ('id',)
+
+
+class Versions(models.Model):
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name='Продукт')
+    number = models.IntegerField(verbose_name='Номер')
+    title = models.CharField(max_length=100, verbose_name='Название')
+    is_active = models.BooleanField(default=True, verbose_name='Активная')
+
+    class Meta:
+        verbose_name = "версия"
+        verbose_name_plural = "версии"
+
+    def __str__(self):
+        return self.title
+
+    @classmethod
+    def get_active_version(cls, product):
+        """Получение активной версии по продукту"""
+        try:
+            return cls.objects.get(product=product, is_active=True)
+        except:
+            return None
+
