@@ -1,27 +1,50 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-
-<div class="col-md-4">
-  <div class="card mb-4 box-shadow">
-     <div class="card-body">
-         {% if product %}
-            <h2>{{ product.title }}</h2>
-         {% else %}
-            <h2>Добавьте товар</h2>
-         {% endif %}
-         <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-             {% if product %}
-                <button type="submit" class="btn btn-primary form-control">Сохранить</button>
-             {% else %}
-                <button type="submit" class="btn btn-primary form-control">Создать</button>
-             {% endif %}
-      </form>
+    <div class="col-12">
+        <form class="row" method="post" enctype="multipart/form-data">
+            <div class="col-6">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {% if product %}
+                                {{ product.title }}
+                            {% else %}
+                                Добавьте товар
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        {% if product %}
+                            <button type="submit" class="btn btn-primary form-control">Сохранить</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary form-control">Создать</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Версии продукта
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {{ formset.management_form }}
+                        {% for form in formset.forms %}
+                            {{ form.as_p }}
+                            {% if not forloop.last %}
+                                <hr>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-  </div>
-</div>
 {% endblock %}
 
 
