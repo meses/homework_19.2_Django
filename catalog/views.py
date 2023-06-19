@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 
+from catalog.forms import ProductForm
 from catalog.models import Category, Product, Blog
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from catalog.services import send_congratuation_email
@@ -26,7 +27,8 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ('title', 'description', 'price', 'category',)
+    #fields = ('title', 'description', 'price', 'category',)
+    form_class = ProductForm
     success_url = reverse_lazy('catalog:index')
     extra_context = {
         'title': 'Создать товар',
@@ -35,7 +37,7 @@ class ProductCreateView(CreateView):
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ('title', 'description', 'price', 'category',)
+    form_class = ProductForm
     success_url = reverse_lazy('catalog:index')
     extra_context = {
         'title': 'Изменить товар',

@@ -10,7 +10,7 @@
          {% else %}
             <h2>Добавьте товар</h2>
          {% endif %}
-         <form method="post">
+         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
              {% if product %}
