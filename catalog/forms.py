@@ -2,8 +2,15 @@ from django import forms
 
 from catalog.models import Product, Versions
 
+class StyleFormMixin:
+    """Класс миксин для стилизации форм"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
-class ProductForm(forms.ModelForm):
+
+class ProductForm(StyleFormMixin, forms.ModelForm):
 
     class Meta:
         model = Product
@@ -22,7 +29,7 @@ class ProductForm(forms.ModelForm):
 
         return cleaned_data
 
-class VersionsForm(forms.ModelForm):
+class VersionsForm(StyleFormMixin, forms.ModelForm):
 
     def clean_is_active(self):
         """"Устанавливает изменяемую/создаваемую версию продукта как текующую версию"""
