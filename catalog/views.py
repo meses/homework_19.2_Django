@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -33,7 +34,7 @@ class ProductDetailView(DetailView):
         context_data['title'] = self.get_object().title
         return context_data
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     #fields = ('title', 'description', 'price', 'category',)
     form_class = ProductForm
