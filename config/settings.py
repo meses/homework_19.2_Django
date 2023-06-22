@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'catalog'
+    'catalog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,5 @@ EMAIL_HOST_USER = 'YANDEX_EMAIL'
 EMAIL_HOST_PASSWORD = 'YANDEX_EMAIL_PASSWORD'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
+
+AUTH_USER_MODEL = 'users.User'
