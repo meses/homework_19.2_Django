@@ -1,5 +1,6 @@
 from django.db import models
 from slugify import slugify
+from users.models import User
 
 # Create your models here.
 NULLABLE = {'null': True, 'blank': True}
@@ -17,6 +18,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, **NULLABLE)
 
     def __str__(self):
         return f'{self.title}, {self.price}, {self.category}'

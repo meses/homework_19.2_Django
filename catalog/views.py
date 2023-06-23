@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 
@@ -43,6 +44,14 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         'title': 'Создать товар',
         'company_title': company_name
     }
+
+    def form_valid(self, form):
+        form = ProductForm(data=self.request.POST)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.user_id = self.request.user
+            product.save()
+        return HttpResponseRedirect(reverse('catalog:index'))
 
 class ProductUpdateView(UpdateView):
     model = Product

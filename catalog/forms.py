@@ -14,7 +14,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = '__all__'
+        exclude = ('user_id',)
 
     def clean(self):
         """Проверяет, ввёл ли пользователь запрещённые слова в title или description"""
