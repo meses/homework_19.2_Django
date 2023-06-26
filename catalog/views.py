@@ -153,9 +153,8 @@ class BlogDetailView(DetailView):
 
     def get_object(self, queryset=None):
         object = Blog.objects.get(pk=self.kwargs['pk'])
-        if object.views_count == 100:
+        if object.views_count == 1:
             send_congratuation_email()
-            pass
         return object
 
 def toggle_published(request, pk):

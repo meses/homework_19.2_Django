@@ -6,5 +6,5 @@ def send_congratuation_email():
         'Поздравляем!',
         'Статья набрала сто просмотров',
         settings.EMAIL_HOST_USER,
-        recipient_list=['cnmeses@mail.ru']
+        recipient_list=['dvayuzer@yandex.ru']
     )
