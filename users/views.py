@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
-from users.services import generate_code
+from users.services import generate_code, generate_password
 
 
 # Create your views here.
@@ -59,5 +59,18 @@ def confirm_code(request, email):
 
     return render(request, 'users/confirm_code.html', context)
 
-def confirmation_succsess(requset):
-    return render(requset, 'users/confirmation_succsess.html')
+def confirmation_succsess(request):
+    return render(request, 'users/confirmation_succsess.html')
+
+def forgot_password(request):
+    new_passowrd = generate_password()
+    send_mail(
+        subject='Восстановление пароля',
+        message=f'Ваш новый пароль {new_passowrd}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[request.user.email]
+    )
+    request.user.set_password(new_passowrd)
+    request.user.save()
+    return redirect(reverse('users:login'))
+
