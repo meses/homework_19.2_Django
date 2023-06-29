@@ -19,6 +19,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, **NULLABLE)
+    is_published = models.BooleanField(default=False, verbose_name='Опубликовано')
 
     def __str__(self):
         return f'{self.title}, {self.price}, {self.category}'

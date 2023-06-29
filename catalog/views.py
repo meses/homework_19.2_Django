@@ -1,6 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 
@@ -13,7 +14,7 @@ from catalog.services import send_congratuation_email
 # Create your views here.
 company_name = 'Магазин на диване'
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {
         'title': 'Товары',
@@ -27,18 +28,20 @@ class ProductListView(ListView):
             product.get_active_version()
         return context
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Product
+    permission_required = 'catalog.view_product'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = self.get_object().title
         return context_data
 
-class ProductCreateView(LoginRequiredMixin, CreateView):
+class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Product
     #fields = ('title', 'description', 'price', 'category',)
     form_class = ProductForm
+    permission_required = 'catalog.add_product'
     success_url = reverse_lazy('catalog:index')
     extra_context = {
         'title': 'Создать товар',
@@ -53,9 +56,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
             product.save()
         return HttpResponseRedirect(reverse('catalog:index'))
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
+    permission_required = 'catalog.change_product'
     success_url = reverse_lazy('catalog:index')
     extra_context = {
         'title': 'Изменить товар',
@@ -80,8 +84,19 @@ class ProductUpdateView(UpdateView):
             
         return super().form_valid(form)
 
-class ProductDeleteView(DeleteView):
+
+    def get_object(self, queryset=None):
+        object = super().get_object(queryset)
+        print(object.user_id)
+        print(self.request.user)
+        if object.user_id != self.request.user:
+            raise Http404("Вы не являетесь владельцем продукта.")
+        return object
+
+
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
+    permission_required = 'catalog.delete_product'
     success_url = reverse_lazy('catalog:index')
     extra_context = {
         'title': 'Удалить товар',
@@ -89,7 +104,7 @@ class ProductDeleteView(DeleteView):
     }
 
 
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
     extra_context = {
         'title': 'Блог магазина',
@@ -101,7 +116,7 @@ class BlogListView(ListView):
         queryset = queryset.filter(is_published=True)
         return queryset
 
-class BlogListViewNotPublished(ListView):
+class BlogListViewNotPublished(LoginRequiredMixin, ListView):
     model = Blog
     extra_context = {
         'title': 'Блог магазина',
@@ -113,7 +128,7 @@ class BlogListViewNotPublished(ListView):
         queryset = queryset.filter(is_published=False)
         return queryset
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     fields = ('title', 'content',)
     success_url = reverse_lazy('catalog:blog')
@@ -122,7 +137,7 @@ class BlogCreateView(CreateView):
         'company_title': company_name
     }
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     fields = ('title', 'content',)
     extra_context = {
@@ -133,7 +148,7 @@ class BlogUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('catalog:post_detail', kwargs={'pk': self.kwargs['pk']})
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('catalog:blog')
     extra_context = {
@@ -141,7 +156,7 @@ class BlogDeleteView(DeleteView):
         'company_title': company_name
     }
 
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin, DetailView):
     model = Blog
 
     def get_context_data(self, **kwargs):
@@ -157,6 +172,7 @@ class BlogDetailView(DetailView):
             send_congratuation_email()
         return object
 
+@login_required
 def toggle_published(request, pk):
     post_item = get_object_or_404(Blog, pk=pk)
     if post_item.is_published:
@@ -168,14 +184,14 @@ def toggle_published(request, pk):
 
     return redirect(reverse('catalog:post_update', args=[post_item.pk]))
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     extra_context = {
         'title': 'Категории',
         'company_title': company_name
     }
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
     fields = ('title', 'description',)
     success_url = reverse_lazy('catalog:category')
@@ -184,7 +200,7 @@ class CategoryCreateView(CreateView):
         'company_title': company_name
     }
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Category
     fields = ('title', 'description',)
     success_url = reverse_lazy('catalog:category')
@@ -193,7 +209,7 @@ class CategoryUpdateView(UpdateView):
         'company_title': company_name
     }
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     success_url = reverse_lazy('catalog:category')
     extra_context = {

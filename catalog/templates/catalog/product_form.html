@@ -25,6 +25,7 @@
                     </div>
                 </div>
             </div>
+        {% if perms.catalog.change_versions %}
             <div class="col-6">
                 <div class="card mb-4 box-shadow">
                     <div class="card-header">
@@ -43,6 +44,7 @@
                     </div>
                 </div>
             </div>
+        {% endif %}
         </form>
     </div>
 {% endblock %}
